@@ -2,10 +2,10 @@ from kafi.streams.streams import Streams
 import logging
 logging.basicConfig(level=logging.INFO)
 
-# from kafi.kafka.cluster.cluster import Cluster
-# c = Cluster({"kafka": {"bootstrap.servers": "localhost:9092"}})
-from kafi.fs.local.local import Local
-c = Local({"local": {"root.dir": "/tmp"}})
+from kafi.kafka.cluster.cluster import Cluster
+c = Cluster({"kafka": {"bootstrap.servers": "localhost:9092"}, "kafi": {"consume.timeout": 0.1, "consume.batch.size": 1000}})
+# from kafi.fs.local.local import Local
+# c = Local({"local": {"root.dir": "/tmp"}})
 
 context_source = "context-data"
 metric_source = "metrics-raw-telegraf-env"
@@ -128,4 +128,4 @@ windowed = joined.group_by_agg_tumbling(ts_fun=ts_fun,
 topology = Streams.build(windowed)
 
 #stop = Streams.start_streams(topology, progress=True)
-Streams.streams(topology)
+Streams.streams(topology, progress=True)
